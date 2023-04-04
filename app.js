@@ -7,6 +7,34 @@ const port = 3000;
 
 const htmlServer = http.createServer((req, res) => {
 
+    const reqUrl = new URL(req.url, `http://${hostname}:${port}`)
+
+    if (reqUrl.pathname === '/submit-here') {
+        const { searchParams } = reqUrl
+        res.writeHead(200, {
+            'Content-Type': 'text/html'
+        })
+
+        searchParams.forEach((value, key) => {
+            if (value && key) {
+                const dataPath = path.normalize(path.format({
+                    dir: 'data',
+                    name: key,
+                    ext: '.txt',
+                }))
+                fs.writeFile(dataPath, value, (err) => {
+                    if (err) {
+                        console.error(err)
+                    } else {
+                        console.log(`Successfully wrote ${key}.txt`)
+                    }
+                })
+            }
+        })
+        // search params are a set. Which is unexpected and a bit annoying.
+        res.end(JSON.stringify([...searchParams]))
+    }
+
     const staticFilePath = path.normalize(path.format({
         dir: 'static',
         name: req.url,
