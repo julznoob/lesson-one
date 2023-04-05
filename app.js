@@ -15,18 +15,20 @@ const htmlServer = http.createServer((req, res) => {
             'Content-Type': 'text/html'
         })
 
+        // I'm really starting to respect how much effort goes into simple data storage and retrieval
+
         searchParams.forEach((value, key) => {
             if (value && key) {
+                const data = `timeStamp: ${Date.now().toString()}, ${key},${value}\n`
                 const dataPath = path.normalize(path.format({
                     dir: 'data',
-                    name: key,
-                    ext: '.txt',
+                    name: 'data.csv'
                 }))
-                fs.writeFile(dataPath, value, (err) => {
+                fs.appendFile(dataPath, data, (err) => {
                     if (err) {
                         console.error(err)
                     } else {
-                        console.log(`Successfully wrote ${key}.txt`)
+                        console.log(`Successfully wrote ${data}`)
                     }
                 })
             }
