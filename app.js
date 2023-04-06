@@ -7,6 +7,36 @@ const port = 3000;
 
 const htmlServer = http.createServer((req, res) => {
 
+    const reqUrl = new URL(req.url, `http://${hostname}:${port}`)
+
+    if (reqUrl.pathname === '/submit-here') {
+        const { searchParams } = reqUrl
+        res.writeHead(200, {
+            'Content-Type': 'text/html'
+        })
+
+        // I'm really starting to respect how much effort goes into simple data storage and retrieval
+
+        searchParams.forEach((value, key) => {
+            if (value && key) {
+                const data = `timeStamp: ${Date.now().toString()}, ${key},${value}\n`
+                const dataPath = path.normalize(path.format({
+                    dir: 'data',
+                    name: 'data.csv'
+                }))
+                fs.appendFile(dataPath, data, (err) => {
+                    if (err) {
+                        console.error(err)
+                    } else {
+                        console.log(`Successfully wrote ${data}`)
+                    }
+                })
+            }
+        })
+        // search params are a set. Which is unexpected and a bit annoying.
+        res.end(JSON.stringify([...searchParams]))
+    }
+
     const staticFilePath = path.normalize(path.format({
         dir: 'static',
         name: req.url,
