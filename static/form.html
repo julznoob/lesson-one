@@ -1,28 +1,39 @@
-<h1>Lets submit a thing</h1>
+<!DOCTYPE html>
+<html lang="en-GB">
 
-<div>
-    <p>In this form we will:</p>
+<head>
+    <meta charset="utf-8" />
+    <title>My CSS experiment</title>
+    <link rel="stylesheet" href="styles.css" type="text/css" />
+</head>
+
+<body>
+
+    <h1>Lets submit a thing</h1>
+
+    <div>
+        <p>In this form we:</p>
+        <ul>
+            <li>Send the data from the form to the server</li>
+            <li>persist the arguments to a .csv file</li>
+        </ul>
+    </div>
+    <form action="/submit-here">
+        <label>Name</label>
+        <input name="submitted-name" />
+        <label>Email</label>
+        <input name="submitted-email" />
+
+        <button>Submit to me!</button>
+    </form>
+
+    <h1>Learnings:</h1>
     <ul>
-        <li>Send the data from the form to the server</li>
-        <li>Log the data to the console on the server</li>
-        <li>Eventually find some way to persist data?</li>
-        <li>Maybe we should save it to disk?</li>
-        <li>Spam the server and see if we can lock up the node process</li>
-        <li>Eventually replace that with a database connection</li>
+        <li>Default behaviour of a form is: GET</li>
+        <li>The form data just gets bunged on the current form url</li>
+        <li>Like this: "/form?submitted-name=Hello"</li>
     </ul>
-</div>
-<form action="/submit-here">
-    <label>Name</label>
-    <input name="submitted-name"/>
-    <label>Email</label>
-    <input name="submitted-email"/>
 
-    <button>Submit to me!</button>
-</form>
+</body>
 
-<h1>Learnings:</h1>
-<ul>
-    <li>Default behaviour of a form is: GET</li>
-    <li>The form data just gets bunged on the current form url</li>
-    <li>Like this: "/form?submitted-name=Hello"</li>
-</ul>
+</html>

@@ -8,6 +8,14 @@ const port = 3000;
 const htmlServer = http.createServer((req, res) => {
 
     const reqUrl = new URL(req.url, `http://${hostname}:${port}`)
+    const isCSS = /\.css$/.test(req.url)
+
+    // if we don't have an extension, add .html, otherwise, add nothing.
+    const staticFilePath = path.normalize(path.format({
+        dir: 'static',
+        name: req.url,
+        ext: !!path.parse(req.url).ext ? undefined : '.html',
+    }))
 
     if (reqUrl.pathname === '/submit-here') {
         const { searchParams } = reqUrl
@@ -37,11 +45,6 @@ const htmlServer = http.createServer((req, res) => {
         res.end(JSON.stringify([...searchParams]))
     }
 
-    const staticFilePath = path.normalize(path.format({
-        dir: 'static',
-        name: req.url,
-        ext: '.html',
-    }))
 
     // TODO: handle other file types?
     // TODO: default to index file if there is one?
@@ -55,7 +58,7 @@ const htmlServer = http.createServer((req, res) => {
             res.end(`<h1>Nothing to see here</h1>`)
         } else {
             res.statusCode = 200
-            res.setHeader('Content-Type', 'text/html');
+            res.setHeader('Content-Type', isCSS ? 'text/css' : 'text/html');
             fs.createReadStream(staticFilePath).pipe(res)
         }
     })
