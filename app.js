@@ -9,6 +9,13 @@ const htmlServer = http.createServer((req, res) => {
 
     const reqUrl = new URL(req.url, `http://${hostname}:${port}`)
 
+    // if we don't have an extension, add .html, otherwise, add nothing.
+    const staticFilePath = path.normalize(path.format({
+        dir: 'static',
+        name: req.url,
+        ext: !!path.parse(req.url).ext ? undefined : '.html',
+    }))
+
     if (reqUrl.pathname === '/submit-here') {
         const { searchParams } = reqUrl
         res.writeHead(200, {
@@ -37,11 +44,6 @@ const htmlServer = http.createServer((req, res) => {
         res.end(JSON.stringify([...searchParams]))
     }
 
-    const staticFilePath = path.normalize(path.format({
-        dir: 'static',
-        name: req.url,
-        ext: '.html',
-    }))
 
     // TODO: handle other file types?
     // TODO: default to index file if there is one?
